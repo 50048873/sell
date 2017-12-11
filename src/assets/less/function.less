@@ -1,0 +1,42 @@
+/* 常用工具类 */
+
+@import 'variable.less';
+
+.sj-t(@w:12px, @c: #43c5ef) { 
+	width: 0;
+	height: 0;
+	overflow: hidden;
+	border-width: @w;
+	border-color: transparent transparent @c transparent;
+	border-style: dashed dashed solid dashed;
+}
+.sj-r(@w:12px, @c: red) { 
+	width: 0;
+	height: 0;
+	overflow: hidden;
+	border-width: @w;
+	border-color: transparent transparent transparent @c;
+	border-style: dashed dashed dashed solid;
+}
+.sj-l(@w:12px, @c: red) { 
+	width: 0;
+	height: 0;
+	overflow: hidden;
+	border-width: @w;
+	border-color: transparent @c transparent transparent;
+	border-style: dashed solid dashed dashed;
+}
+.sj-b(@w:12px, @c: #43c5ef) { 
+	width: 0;
+	height: 0;
+	overflow: hidden;
+	border-width: @w;
+	border-color: @c transparent transparent transparent;
+	border-style: solid dashed dashed dashed;
+}
+.bg-image(@2x, @3x) { 
+	background-image: url(@2x);
+	@media (-webkit-min-device-pixel-ratio: 3), (min-device-pixel-ratio: 3) {
+		background-image: url(@3x);
+	}
+}
