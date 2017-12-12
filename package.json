@@ -1,7 +1,7 @@
 {
-  "name": "eleme",
+  "name": "sell",
   "version": "1.0.0",
-  "description": "eleme app",
+  "description": "sell app",
   "author": "50048873 <50048873@qq.com>",
   "private": true,
   "scripts": {

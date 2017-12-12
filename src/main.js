@@ -8,14 +8,8 @@ import goods from './components/goods'
 import ratings from './components/ratings'
 import seller from './components/seller'
 
-/*var Vue = require('../node_modules/vue/dist/vue')
-var VueRouter = require('../node_modules/vue-router/dist/vue-router')
-var App = require('./App')
-var goods = require('./components/goods')
-var ratings = require('./components/ratings')
-var seller = require('./components/seller')*/
-
-import './assets/less/common.less';
+// 这样引入，common.less会当模块处理，被编译成style标签加入head中
+import './assets/less/common.less'
 
 Vue.use(VueRouter)
 Vue.use(VueResource)

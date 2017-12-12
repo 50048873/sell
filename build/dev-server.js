@@ -20,6 +20,7 @@ var autoOpenBrowser = !!config.dev.autoOpenBrowser
 // https://github.com/chimurai/http-proxy-middleware
 var proxyTable = config.dev.proxyTable
 
+// 模拟后台返回本地json数据
 var app = express()
 
 var appData = require('../data.json')
