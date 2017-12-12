@@ -22,24 +22,14 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src')
+      '@': resolve('src'),
+      'assets': resolve('src/assets'),
+      'components': resolve('src/components')
     }
   },
   module: {
     rules: [
-      /*{
-        test: /\.less$/,
-        use: [{
-            loader: "style-loader"
-        }, {
-            loader: "css-loader"
-        }, {
-            loader: "less-loader", options: {
-                strictMath: true,
-                noIeCompat: true
-            }
-        }]
-      },
+      /*
       {
         test: /\.(js|vue)$/,
         loader: 'eslint-loader',
