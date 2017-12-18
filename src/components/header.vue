@@ -44,7 +44,8 @@ export default {
   name: 'header',
   props: { 
   	seller: { 
-  		type: Object
+  		type: Object,
+  		default: {}
   	}
   },
   data() { 

@@ -18,6 +18,7 @@
 
 <script>
 import header from 'components/header'
+import {ERR_OK} from 'api/config'
 
 export default {
   name: 'app',
@@ -32,8 +33,11 @@ export default {
   created () { 
   	this.$http.get('/api/seller')
   		.then((res) => { 
-  			this.seller = res.body.data
-  			console.log(this.seller)
+  			res = res.body
+  			if (res.errno === ERR_OK) { 
+	  			this.seller = res.data
+	  			console.log(this.seller)
+  			}
   		})
   }
 }
@@ -50,7 +54,6 @@ export default {
 	height: 40px;
 	line-height: 40px;
 	text-align: center;
-	position: relative;
 	.tab-item { 
 		flex: 1;
 		a { 
