@@ -31,6 +31,7 @@
   	<div class="detail" v-show="detailShow">
   		<div class="detail-main">
 			<h1 class="name">{{seller.name}}</h1>
+			<star-score></star-score>
 		</div>
   		<div class="detail-close">
   			<i class="fa fa-close"></i>
@@ -40,8 +41,12 @@
 </template>
 
 <script>
+import StarScore from 'components/baseComponents/star-score'
 export default {
   name: 'header',
+  components: { 
+  	StarScore
+  },
   props: { 
   	seller: { 
   		type: Object,
@@ -55,11 +60,11 @@ export default {
   },
   methods: { 
   	showDetail() { 
-  		this.detailShow = true;
+  		this.detailShow = true
   	}
   },
   created() { 
-  	this.iconMap = ['icon-decrease', 'icon-discount', 'icon-special', 'icon-invoice', 'icon-guarantee'];
+  	this.iconMap = ['icon-decrease', 'icon-discount', 'icon-special', 'icon-invoice', 'icon-guarantee']
   }
 }
 </script>
@@ -173,6 +178,7 @@ export default {
 			overflow: hidden;
 			text-overflow: ellipsis;
 			background-color: rgba(7, 17, 27, 0.2);
+			font-size: 0;
 			.bulletin-title { 
 				display: inline-block;
 				vertical-align: middle;
@@ -185,7 +191,7 @@ export default {
 			.bulletin-text { 
 				vertical-align: middle;
 				font-size: 10px;
-				margin: 0 4px 0 2px;
+				margin: 0 4px;
 			}
 			.fa { 
 				position: absolute;
