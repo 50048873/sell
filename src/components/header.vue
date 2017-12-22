@@ -41,7 +41,7 @@
 
 <script>
 export default {
-  name: 'header',
+  name: 'vHeader',
   props: { 
   	seller: { 
   		type: Object,
