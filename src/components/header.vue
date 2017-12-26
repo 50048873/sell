@@ -31,7 +31,20 @@
   	<div class="detail" v-show="detailShow">
   		<div class="detail-main">
 			<h1 class="name">{{seller.name}}</h1>
-			<star-score></star-score>
+			<div class="star-wrap">
+				<star-score :score="seller.score" margin="18"></star-score>	
+			</div>
+			<div class="title">
+				<div class="line"></div>
+				<div class="text">优惠信息</div>
+				<div class="line"></div>
+			</div>
+			<ul class="supports">
+				<li class="support-item" v-for="(item, index) in seller.supports">
+					<span class="icon"><i :class="iconMap[seller.supports[index].type]"></i></span>
+					<span class="text">{{seller.supports[index].description}}</span>
+				</li>
+			</ul>
 		</div>
   		<div class="detail-close">
   			<i class="fa fa-close"></i>
@@ -231,6 +244,27 @@ export default {
 					text-align: center;
 					font-size: 16px;
 					font-weight: 700;
+				}
+				.star-wrap { 
+					margin-top: 18px;
+					padding: 2px 0;
+					text-align: center;
+				}
+				.title { 
+					display: flex;
+					width: 80%;
+					margin: 28px auto 24px;
+					.line { 
+						flex: 1;
+						position: relative;
+						top: -6px;
+						border-bottom: 1px solid rgba(255, 255, 255, 0.2)
+					}
+					.text { 
+						padding: 0 12px;
+						font-size: 14px;
+						font-weight: 700;
+					}
 				}
 			}
 			.detail-close { 

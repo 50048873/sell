@@ -1,6 +1,6 @@
 <template>
 	<div class="starScore">
-		<span v-for="(item, index) in starNum" class="item" :style="size">
+		<span v-for="(item, index) in star" class="item" :style="size">
 			<i class="icon-star"></i>
 			<i :class="getColorStar(index)"></i>
 		</span>
@@ -13,24 +13,24 @@ const STAR_HALF = 'icon-star-half'
 export default {
 	name: 'starScore',
 	props: { 
-		starNum: { 
+		star: { 
 			type: Number,
 			default: 5,
 			required: false
 		},
-		scoreNum: { 
+		score: { 
 			type: Number,
-			default: 4.3,
+			default: 0,
 			required: false
 		},
 		fontSize: { 
 			type: String,
-			default: '24px',
+			default: '18',
 			required: false
 		},
 		margin: { 
 			type: String,
-			default: '4px',
+			default: '4',
 			required: false
 		}
 	},
@@ -42,20 +42,20 @@ export default {
 	computed: { 
 		size() { 
 			return {
-				fontSize: this.fontSize, 
-				width: this.fontSize, 
-				height: this.fontSize,
-				marginRight: this.margin
+				fontSize: parseInt(this.fontSize) + 'px', 
+				width: parseInt(this.fontSize) + 'px', 
+				height: parseInt(this.fontSize) + 'px',
+				marginRight: parseInt(this.margin) + 'px'
 			}
 		}
 	},
 	methods: { 
 		scoreToArr() { 
-			let scoreNum = this.scoreNum
-			let starNum = this.starNum
+			let score = this.score
+			let star = this.star
 			let arr = []
-			let integer = parseInt(scoreNum)
-			let decimals = /(\.\d*)/.exec(scoreNum)
+			let integer = parseInt(score)
+			let decimals = /(\.\d*)/.exec(score)
 			for (var i = 0; i < integer; i++) { 
 				arr[i] = 1
 			}
@@ -79,11 +79,17 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
 	.starScore { 
+		display: inline-block;
 		.item { 
 			position: relative;
 			float: left;
 			width: 18px;
 			height: 18px;
+			i { 
+				display: inline-block;
+				width: 100%;
+				height: 100%;
+			}
 			.icon-star:first-child { 
 				position: absolute;
 				color: #737577;
