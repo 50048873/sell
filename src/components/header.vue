@@ -28,28 +28,38 @@
   		<i class="fa fa-angle-right"></i>
   	</div>
   	<div class="background" :style="{backgroundImage: 'url(' + seller.avatar + ')'}"></div>
-  	<div class="detail" v-show="detailShow">
-  		<div class="detail-main">
-			<h1 class="name">{{seller.name}}</h1>
-			<div class="star-wrap">
-				<star-score :score="seller.score" margin="18"></star-score>	
+  	<transition name="fade">
+	  	<div class="detail" v-show="detailShow">
+	  		<div class="detail-main">
+				<h1 class="name">{{seller.name}}</h1>
+				<div class="star-wrap">
+					<star-score :score="seller.score" margin="18"></star-score>	
+				</div>
+				<div class="title">
+					<div class="line"></div>
+					<div class="text">优惠信息</div>
+					<div class="line"></div>
+				</div>
+				<ul class="supports">
+					<li class="support-item" v-for="(item, index) in seller.supports">
+						<span class="icon"><i :class="iconMap[seller.supports[index].type]"></i></span>
+						<span class="text">{{seller.supports[index].description}}</span>
+					</li>
+				</ul>
+				<div class="title">
+					<div class="line"></div>
+					<div class="text">商家公告</div>
+					<div class="line"></div>
+				</div>
+				<div class="bulletin">
+					<p class="content">{{seller.bulletin}}</p>
+				</div>
 			</div>
-			<div class="title">
-				<div class="line"></div>
-				<div class="text">优惠信息</div>
-				<div class="line"></div>
-			</div>
-			<ul class="supports">
-				<li class="support-item" v-for="(item, index) in seller.supports">
-					<span class="icon"><i :class="iconMap[seller.supports[index].type]"></i></span>
-					<span class="text">{{seller.supports[index].description}}</span>
-				</li>
-			</ul>
-		</div>
-  		<div class="detail-close">
-  			<i class="fa fa-close"></i>
-  		</div>
-  	</div>
+	  		<div class="detail-close" @click="hideDetail">
+	  			<i class="fa fa-close"></i>
+	  		</div>
+	  	</div>
+  	</transition>
   </div>
 </template>
 
@@ -74,6 +84,9 @@ export default {
   methods: { 
   	showDetail() { 
   		this.detailShow = true
+  	},
+  	hideDetail() { 
+  		this.detailShow = false
   	}
   },
   created() { 
@@ -231,9 +244,21 @@ export default {
 			width: 100%;
 			height: 100%;
 			overflow: auto;
-			background-color: rgba(7, 17, 27, 0.8);
 			top: 0;
 			left: 0;
+			transition: all 0.3s;
+			&.fade-enter-active, &.fade-leave-active { 
+				
+				opacity: 1;
+				background-color: rgba(7, 17, 27, 0.8);
+			}
+		      
+		    &.fade-enter, &.fade-leave-to { 
+				
+				opacity: 0;
+				background-color: rgba(7, 17, 27, 0);
+		    }
+		     	
 			.detail-main { 
 				min-height: 100%;
 				padding-top: 64px;
@@ -264,6 +289,59 @@ export default {
 						padding: 0 12px;
 						font-size: 14px;
 						font-weight: 700;
+					}
+				}
+				.supports { 
+					width: 80%;
+					margin: 0 auto;
+					.support-item { 
+						margin-bottom: 12px;
+						padding: 0 12px;
+						.icon { 
+							display: inline-block;
+							width: 16px;
+							height: 16px;
+							margin-right: 6px;
+							background-color: white;
+							border-radius: 2px;
+							i { 
+								display: block;
+								font-size: 12px;
+								margin-top: 2px;
+								margin-left: 2px;
+							}
+							.icon-decrease { 
+								color: #f67272;
+							}
+							.icon-discount { 
+								color: #1595cc;
+							}
+							.icon-special { 
+								color: #14ba4a;
+							}
+							.icon-invoice { 
+								color: #80006e;
+							}
+							.icon-guarantee { 
+								color: #00c48a;
+							}
+						}
+						.text { 
+							font-size: 12px;
+							font-weight: 200;
+							line-height: 16px;
+						}
+					}
+				}
+				.bulletin { 
+					width: 80%;
+					margin: 0 auto;
+					.content { 
+						padding: 0 12px;
+						font-size: 12px;
+						font-weight: 200;
+						line-height: 24px;
+						text-align: justify;
 					}
 				}
 			}
