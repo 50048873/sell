@@ -246,19 +246,14 @@ export default {
 			overflow: auto;
 			top: 0;
 			left: 0;
-			transition: all 0.3s;
+			background-color: rgba(7, 17, 27, 0.8);
 			&.fade-enter-active, &.fade-leave-active { 
-				
-				opacity: 1;
-				background-color: rgba(7, 17, 27, 0.8);
+				transition: all 0.5s;
 			}
-		      
 		    &.fade-enter, &.fade-leave-to { 
-				
 				opacity: 0;
 				background-color: rgba(7, 17, 27, 0);
 		    }
-		     	
 			.detail-main { 
 				min-height: 100%;
 				padding-top: 64px;
