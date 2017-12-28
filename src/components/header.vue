@@ -13,7 +13,7 @@
   				{{seller.description}}/{{seller.deliveryTime}}分钟送达
   			</div>
   			<div v-if="seller.supports" class="support">
-  				<span class="icon"><i :class="iconMap[seller.supports[0].type]"></i></span>
+  				<discount-type class="iconWrap" :type="seller.supports[0].type"></discount-type>
   				<span class="text">{{seller.supports[0].description}}</span>
   			</div>
   		</div>
@@ -42,7 +42,7 @@
 				</div>
 				<ul class="supports">
 					<li class="support-item" v-for="(item, index) in seller.supports">
-						<span class="icon"><i :class="iconMap[seller.supports[index].type]"></i></span>
+						<discount-type class="iconWrap" :type="seller.supports[index].type" size="16"></discount-type>
 						<span class="text">{{seller.supports[index].description}}</span>
 					</li>
 				</ul>
@@ -64,35 +64,37 @@
 </template>
 
 <script>
-import StarScore from 'components/baseComponents/star-score'
-export default {
-  name: 'vHeader',
-  components: { 
-  	StarScore
-  },
-  props: { 
-  	seller: { 
-  		type: Object,
-  		default: {}
-  	}
-  },
-  data() { 
-  	return { 
-  		detailShow: false
-  	}
-  },
-  methods: { 
-  	showDetail() { 
-  		this.detailShow = true
-  	},
-  	hideDetail() { 
-  		this.detailShow = false
-  	}
-  },
-  created() { 
-  	this.iconMap = ['icon-decrease', 'icon-discount', 'icon-special', 'icon-invoice', 'icon-guarantee']
-  }
-}
+	import StarScore from 'components/baseComponents/star-score'
+	import DiscountType from 'components/discount-type'
+	export default {
+	  name: 'VHeader',
+	  components: { 
+	  	StarScore,
+	  	DiscountType
+	  },
+	  props: { 
+	  	seller: { 
+	  		type: Object,
+	  		default: {}
+	  	}
+	  },
+	  data() { 
+	  	return { 
+	  		detailShow: false
+	  	}
+	  },
+	  methods: { 
+	  	showDetail() { 
+	  		this.detailShow = true
+	  	},
+	  	hideDetail() { 
+	  		this.detailShow = false
+	  	}
+	  },
+	  created() { 
+	  	this.iconMap = ['icon-decrease', 'icon-discount', 'icon-special', 'icon-invoice', 'icon-guarantee']
+	  }
+	}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -140,41 +142,17 @@ export default {
 					line-height: 12px;
 					font-size: 12px;
 				}
-				.support { 
-					.icon { 
-						display: inline-block;
-						width: 12px;
-						height: 12px;
+				 .support { 
+				 	display: flex;
+					.iconWrap { 
 						margin-right: 4px;
-						background-color: white;
-						border-radius: 2px;
-						i { 
-							display: block;
-							transform: scale(0.8);
-							font-size: 12px;
-						}
-						.icon-decrease { 
-							color: #f67272;
-						}
-						.icon-discount { 
-							color: #1595cc;
-						}
-						.icon-special { 
-							color: #14ba4a;
-						}
-						.icon-invoice { 
-							color: #80006e;
-						}
-						.icon-guarantee { 
-							color: #00c48a;
-						}
 					}
 					.text { 
 						font-size: 10px;
 						line-height: 12px;
 						vertical-align: 2px;
 					}
-				}
+				} 
 			}
 			.support-count { 
 				position: absolute;
@@ -247,8 +225,10 @@ export default {
 			top: 0;
 			left: 0;
 			background-color: rgba(7, 17, 27, 0.8);
+			backdrop-filter: blur(10px);
+			transition: all 0.5s;
 			&.fade-enter-active, &.fade-leave-active { 
-				transition: all 0.5s;
+				
 			}
 		    &.fade-enter, &.fade-leave-to { 
 				opacity: 0;
@@ -290,38 +270,15 @@ export default {
 					width: 80%;
 					margin: 0 auto;
 					.support-item { 
+						display: flex;
+						align-items: center;
 						margin-bottom: 12px;
 						padding: 0 12px;
-						.icon { 
-							display: inline-block;
-							width: 16px;
-							height: 16px;
+						.iconWrap { 
 							margin-right: 6px;
-							background-color: white;
-							border-radius: 2px;
-							i { 
-								display: block;
-								font-size: 12px;
-								margin-top: 2px;
-								margin-left: 2px;
-							}
-							.icon-decrease { 
-								color: #f67272;
-							}
-							.icon-discount { 
-								color: #1595cc;
-							}
-							.icon-special { 
-								color: #14ba4a;
-							}
-							.icon-invoice { 
-								color: #80006e;
-							}
-							.icon-guarantee { 
-								color: #00c48a;
-							}
 						}
 						.text { 
+							flex: 1;
 							font-size: 12px;
 							font-weight: 200;
 							line-height: 16px;
