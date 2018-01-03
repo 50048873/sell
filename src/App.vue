@@ -17,13 +17,13 @@
 </template>
 
 <script>
-import header from 'components/header'
+import VHeader from 'components/v-header'
 import {ERR_OK} from 'api/config'
 
 export default {
   name: 'app',
   components: { 
-    vHeader: header
+    VHeader
   },
   data () { 
   	return { 

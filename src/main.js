@@ -4,9 +4,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
 import App from './App'
-import goods from 'components/goods'
-import ratings from 'components/ratings'
-import seller from 'components/seller'
+import VGoods from 'components/v-goods'
+import VRatings from 'components/v-ratings'
+import VSeller from 'components/v-seller'
 
 // 这样引入，common.less会当模块处理，被编译成style标签加入head中
 import './assets/less/common.less'
@@ -19,10 +19,10 @@ let routes = {
 	base: '/sell/',
 	//linkActiveClass: 'active', // 全局配置链接激活时使用的 CSS 类名默认值。
 	routes: [ 
-		{ path: '/', component: goods, redirect: '/goods' },
-		{ path: '/goods', component: goods },
-		{ path: '/ratings', component: ratings },
-		{ path: '/seller', component: seller }
+		{ path: '/', component: VGoods, redirect: '/goods' },
+		{ path: '/goods', component: VGoods },
+		{ path: '/ratings', component: VRatings },
+		{ path: '/seller', component: VSeller }
 	]
 }
   

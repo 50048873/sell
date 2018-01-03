@@ -2,7 +2,7 @@
   <div class="goods">
   	<div class="menu-wrapper" ref="menuWrapper">
   		<ul>
-  			<li class="menu-item line-bottom" :class="{on: index === currentIndex}" v-for="(item, index) in goods">
+  			<li class="menu-item line-bottom" :class="{on: index === currentIndex}" v-for="(item, index) in goods" @click="selectMenu(index, $event)">
   				<div class="itemWrap">
 	  				<discount-type :type="item.type" v-if="item.type > 0"></discount-type>
 	  				<span>{{item.name}}</span>
@@ -36,18 +36,21 @@
   			</li>
   		</ul>
   	</div>
+  	<shop-cart></shop-cart>
   </div>
 </template>
 
 <script>
 	import {ERR_OK} from 'api/config'
 	import DiscountType from 'components/discount-type'
+	import ShopCart from 'components/shop-cart'
 	import BScroll from 'better-scroll'
 	import $ from 'jquery'
 	export default {
 	  name: 'Goods',
 	  components: { 
-	  	DiscountType
+	  	DiscountType,
+	  	ShopCart
 	  },
 	  data() {
 	    return {
@@ -83,12 +86,17 @@
 	  	})
 	  },
 	  methods: { 
+	  	selectMenu(index, event) { 
+	  		this.foodsScroll.scrollToElement($('.food-list-hook')[index], 400)
+	  	},
 	  	_initScroll() { 
-	  		this.menuWrapper = new BScroll(this.$refs.menuWrapper)
-	  		this.foodsWrapper = new BScroll(this.$refs.foodsWrapper, { 
+	  		this.menuScroll = new BScroll(this.$refs.menuWrapper, { 
+	  			click: true
+	  		})
+	  		this.foodsScroll = new BScroll(this.$refs.foodsWrapper, { 
 	  			probeType: 3
 	  		})
-	  		this.foodsWrapper.on('scroll', (pos) => { 
+	  		this.foodsScroll.on('scroll', (pos) => { 
 	  			this.scrollY = Math.abs(pos.y)
 	  		})
 	  	},
@@ -100,7 +108,6 @@
 	  			height += $(val).outerHeight()
 	  			this.listHeight.push(height)
 	  		})
-	  		console.log(this.listHeight)
 	  	}
 	  }
 	}
