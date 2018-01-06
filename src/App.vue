@@ -12,7 +12,7 @@
     		<router-link to="/seller">商家</router-link>
     	</div>
     </div>
-    <router-view></router-view>
+    <router-view :seller="seller"></router-view>
   </div>
 </template>
 
@@ -36,7 +36,7 @@ export default {
   			res = res.body
   			if (res.errno === ERR_OK) { 
 	  			this.seller = res.data
-	  			console.log(this.seller)
+	  			//console.log(this.seller)
   			}
   		})
   }

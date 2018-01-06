@@ -36,7 +36,7 @@
   			</li>
   		</ul>
   	</div>
-  	<shop-cart></shop-cart>
+  	<shop-cart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shop-cart>
   </div>
 </template>
 
@@ -48,6 +48,14 @@
 	import $ from 'jquery'
 	export default {
 	  name: 'Goods',
+	  props: { 
+	  	seller: { 
+	  		type: Object,
+	  		default: function() { 
+	  			return {}
+	  		}
+	  	}
+	  },
 	  components: { 
 	  	DiscountType,
 	  	ShopCart
@@ -77,7 +85,7 @@
 	  		res = res.body
 	  		if (res.errno === ERR_OK) { 
 	  			this.goods = res.data
-	  			console.log(this.goods)
+	  			//console.log(this.goods)
 	  			this._initScroll()
 	  			this.$nextTick(() => { 
 	  				this._calculateHeight()
