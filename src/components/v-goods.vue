@@ -30,6 +30,7 @@
   								<span class="now">￥{{food.price}}</span>
   								<span class="old" v-if="food.oldPrice">￥{{food.oldPrice}}</span>
   							</div>
+							<div class="shopcart-control-wrap"><shopcart-control :food="food"></shopcart-control></div>
   						</div>
   					</li>
   				</ul>
@@ -44,6 +45,7 @@
 	import {ERR_OK} from 'api/config'
 	import DiscountType from 'components/discount-type'
 	import ShopCart from 'components/shop-cart'
+	import ShopcartControl from 'components/shopcart-control'
 	import BScroll from 'better-scroll'
 	import $ from 'jquery'
 	export default {
@@ -58,7 +60,8 @@
 	  },
 	  components: { 
 	  	DiscountType,
-	  	ShopCart
+	  	ShopCart,
+	  	ShopcartControl
 	  },
 	  data() {
 	    return {
@@ -165,7 +168,10 @@
 			}
 			.food-item { 
 				display: flex;
-				padding: 18px;
+				margin-right: 18px;
+				margin-left: 18px;
+				padding-top: 18px;
+				padding-bottom: 18px;
 				&:last-child { 
 					&:after { 
 						display: none;
@@ -215,6 +221,11 @@
 							font-size: 10px;
 							color: rgb(147, 153, 159);
 						}
+					}
+					.shopcart-control-wrap { 
+						position: absolute;
+						right: 0;
+						bottom: 12px;
 					}
 				}
 			}
