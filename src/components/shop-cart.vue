@@ -16,10 +16,17 @@
             </div>
         </div>
         <transition 
-            name="drop"
-            v-on:before-enter="beforeEnter"
-            v-on:enter="enter">
-            <div class="ball" v-show="show" ref="drop"></div>
+            name="ballWrap"
+            @before-enter="beforeEnter"
+            @enter="enter">
+            <div class="ballWrap" v-show="show" ref="ballWrap" @transitionend="transitionend">
+                <transition 
+                    name="ball"
+                    @before-enter="beforeEnter"
+                    @enter="enter">
+                    <div class="ball" v-show="show" ref="ball" @transitionend="transitionend"></div>
+                </transition>
+            </div>
         </transition>
     </div>
 </template>
@@ -87,33 +94,47 @@
         },
         methods: {
             drop(originOffset) {
-                let $drop = $(this.$refs.drop),
-                    dropWidth = $drop.outerWidth(),
-                    dropHeight = $drop.outerHeight()
+                let $ballWrap = $(this.$refs.ballWrap),
+                    ballWrapWidth = $ballWrap.outerWidth(),
+                    ballWrapHeight = $ballWrap.outerHeight()
                 this.offset = {
-                    x: originOffset.left - 32 + (originOffset.width - dropWidth) / 2, // 点击目标左边距离页面左边距 - 动画小球左边距离页面左边距 + (点击目标宽 - 动画小球宽) / 2
-                    y: -( window.innerHeight - originOffset.top - 38 - (originOffset.height - dropHeight) / 2) // 视口高 - 点击目标上边距离页面上边距 - (点击目标高 - 动画小球高) / 2
+                    x: originOffset.left - 32 + (originOffset.width - ballWrapWidth) / 2, // 点击目标左边距离页面左边距 - 动画小球左边距离页面左边距 + (点击目标宽 - 动画小球宽) / 2
+                    y: -( window.innerHeight - originOffset.top - 38 - (originOffset.height - ballWrapHeight) / 2) // 视口高 - 点击目标上边距离页面上边距 - (点击目标高 - 动画小球高) / 2
                 }
                 this.show = true
             },
             beforeEnter(el) {
                 let x = this.offset.x,
                     y = this.offset.y
-                $(el).css({
-                    '-webkit-transform': `translate3d(${x}px, ${y}px, 0)`,
-                    'transform': `translate3d(${x}px, ${y}px, 0)`
+                this.ballWrap = $(this.$refs.ballWrap)
+                this.ball = $(this.$refs.ball)
+                this.ballWrap.css({
+                    '-webkit-transform': `translate3d(0, ${y}px, 0)`,
+                    'transform': `translate3d(0, ${y}px, 0)`
+                })
+                this.ball.css({
+                    '-webkit-transform': `translate3d(${x}px, 0, 0)`,
+                    'transform': `translate3d(${x}px, 0, 0)`
                 })
             },
             enter(el, done) {
                 let rf = el.offsetHeight // 触发浏览器重绘
-                $(el).css({
+                this.ballWrap.css({
                     '-webkit-transform': 'translate3d(0, 0, 0)',
                     'transform': 'translate3d(0, 0, 0)'
                 })
-                if (this.timer) clearTimeout(this.timer)
+                this.ball.css({
+                    '-webkit-transform': `translate3d(0, 0, 0)`,
+                    'transform': `translate3d(0, 0, 0)`
+                })
+
+               /* if (this.timer) clearTimeout(this.timer)
                 this.timer = setTimeout(() => {
                     this.show = false
-                }, 400)
+                }, 400)*/
+            },
+            transitionend() { // 有bug，连续快速点击时，个别的会从右边水平的位置移入
+                this.show = false
             }
         },
         created() {
@@ -227,18 +248,23 @@
                 }
             }
         }
-        .ball {
+        .ballWrap {
             position: fixed;
             left: 32px;
             bottom: 22px;
             z-index: 200;
+        }
+        .ball {
             width: 16px;
             height: 16px;
             background-color: rgb(0, 160, 220);
             border-radius: 50%;
         }
-        .drop-enter-active {    // 定义过渡的状态（时间，延迟和曲线函数）
+        .ballWrap-enter-active {    // 定义过渡的状态（时间，延迟和曲线函数）
           transition: all .4s cubic-bezier(.49,-0.29,.75,.41);
+        }
+        .ball-enter-active {    // 定义过渡的状态（时间，延迟和曲线函数）
+          transition: all .4s linear;
         }
     }
 </style>
