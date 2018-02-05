@@ -1,33 +1,57 @@
 <template>
-    <div class="shopcart">
-        <div class="content">
-            <div class="content-left" :class="highlightByTotalCount">
-                <div class="logo-wrapper">
-                    <div class="logo">
-                        <i class="fa fa-shopping-cart"></i>
+    <div>
+        <div class="shopcart">
+            <div class="content" @click="toggleList">
+                <div class="content-left" :class="highlightByTotalCount">
+                    <div class="logo-wrapper">
+                        <div class="logo">
+                            <i class="fa fa-shopping-cart"></i>
+                        </div>
+                        <div class="num" v-show="totalCount > 0">{{totalCount}}</div>
                     </div>
-                    <div class="num" v-show="totalCount > 0">{{totalCount}}</div>
+                    <div class="price">￥{{totalPrice}}</div>
+                    <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
                 </div>
-                <div class="price">￥{{totalPrice}}</div>
-                <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
+                <div class="content-right" @click.stop="pay">
+                    <div class="pay" :class="highlightByMinPrice">{{payDesc}}</div>
+                </div>
             </div>
-            <div class="content-right">
-                <div class="pay" :class="highlightByMinPrice">{{payDesc}}</div>
-            </div>
+            <transition 
+                name="ballWrap"
+                @before-enter="beforeEnter"
+                @enter="enter">
+                <div class="ballWrap" v-show="show" ref="ballWrap" @transitionend="transitionend">
+                    <transition 
+                        name="ball"
+                        @before-enter="beforeEnter"
+                        @enter="enter">
+                        <div class="ball" v-show="show" ref="ball" @transitionend="transitionend"></div>
+                    </transition>
+                </div>
+            </transition>
+            <transition name="fold">
+                <div class="shopcart-list" v-show="listShow">
+                    <div class="list-header">
+                        <h1 class="title">购物车</h1>
+                        <span class="empty" @click="empty">清空</span>
+                    </div>
+                    <div class="list-content">
+                        <ul>
+                            <li class="food line-bottom" v-for="food in selectFoods">
+                                <span class="name">{{food.name}}</span>
+                                <div class="price">
+                                    <span>${{food.price * food.count}}</span>
+                                </div>
+                                <div class="cartcontrol-wrapper">
+                                    <shopcart-control :food="food"></shopcart-control>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </transition>
         </div>
-        <transition 
-            name="ballWrap"
-            @before-enter="beforeEnter"
-            @enter="enter">
-            <div class="ballWrap" v-show="show" ref="ballWrap" @transitionend="transitionend">
-                <transition 
-                    name="ball"
-                    @before-enter="beforeEnter"
-                    @enter="enter">
-                    <div class="ball" v-show="show" ref="ball" @transitionend="transitionend"></div>
-                </transition>
-            </div>
-        </transition>
+        <mask-layer :show="listShow" @click.native="toggleList"></mask-layer>
     </div>
 </template>
 
@@ -35,6 +59,8 @@
     import {CSS_INTERACTION} from 'assets/js/config.js'
     import {eventHub} from 'assets/js/event.js'
     import $ from 'jquery'
+    import ShopcartControl from 'components/shopcart-control'
+    import MaskLayer from 'components/baseComponents/mask-layer'
     export default {
         name: 'ShopCart',
         props: { 
@@ -56,9 +82,14 @@
                 default: 0
             }
         },
+        components: {
+            ShopcartControl,
+            MaskLayer
+        },
         data() {
             return {
-                show: false
+                show: false,
+                expanded: false
             }
         },
         computed: { 
@@ -90,18 +121,26 @@
                 } else { 
                     return '去结算'
                 }
+            },
+            listShow() {
+                if (this.totalCount && this.expanded) {
+                    return true
+                }
+                return false
             }
         },
         methods: {
             drop(originOffset) {
-                let $ballWrap = $(this.$refs.ballWrap),
-                    ballWrapWidth = $ballWrap.outerWidth(),
-                    ballWrapHeight = $ballWrap.outerHeight()
-                this.offset = {
-                    x: originOffset.left - 32 + (originOffset.width - ballWrapWidth) / 2, // 点击目标左边距离页面左边距 - 动画小球左边距离页面左边距 + (点击目标宽 - 动画小球宽) / 2
-                    y: -( window.innerHeight - originOffset.top - 38 - (originOffset.height - ballWrapHeight) / 2) // 视口高 - 点击目标上边距离页面上边距 - (点击目标高 - 动画小球高) / 2
-                }
-                this.show = true
+                this.$nextTick(() => {  // 加入队列，解决手机上同时执行多个动画慢的问题
+                    let $ballWrap = $(this.$refs.ballWrap),
+                        ballWrapWidth = $ballWrap.outerWidth(),
+                        ballWrapHeight = $ballWrap.outerHeight()
+                    this.offset = {
+                        x: originOffset.left - 32 + (originOffset.width - ballWrapWidth) / 2, // 点击目标左边距离页面左边距 - 动画小球左边距离页面左边距 + (点击目标宽 - 动画小球宽) / 2
+                        y: -( window.innerHeight - originOffset.top - 38 - (originOffset.height - ballWrapHeight) / 2) // 视口高 - 点击目标上边距离页面上边距 - (点击目标高 - 动画小球高) / 2
+                    }
+                    this.show = true
+                })
             },
             beforeEnter(el) {
                 let x = this.offset.x,
@@ -135,6 +174,22 @@
             },
             transitionend() { // 有bug，连续快速点击时，个别的会从右边水平的位置移入
                 this.show = false
+            },
+            toggleList() {
+                if (this.totalCount) {
+                    this.expanded = !this.expanded
+                }
+            },
+            empty() {
+                this.selectFoods.forEach((item) => {
+                    item.count = 0
+                })
+                this.expanded = false
+            },
+            pay() {
+                if (this.totalPrice > this.minPrice) {
+                    alert(`您需要支付${this.totalPrice}元`)
+                }
             }
         },
         created() {
@@ -253,18 +308,78 @@
             left: 32px;
             bottom: 22px;
             z-index: 200;
-        }
-        .ball {
-            width: 16px;
-            height: 16px;
-            background-color: rgb(0, 160, 220);
-            border-radius: 50%;
+            .ball {
+                width: 16px;
+                height: 16px;
+                background-color: rgb(0, 160, 220);
+                border-radius: 50%;
+            }
         }
         .ballWrap-enter-active {    // 定义过渡的状态（时间，延迟和曲线函数）
           transition: all .4s cubic-bezier(.49,-0.29,.75,.41);
         }
         .ball-enter-active {    // 定义过渡的状态（时间，延迟和曲线函数）
           transition: all .4s linear;
+        }
+        .fold-enter-active, .fold-leave-active {
+            transition: all 0.4s linear;
+        }
+        .fold-enter, .fold-leave-to {
+            transform: translate3d(0, 100%, 0);
+        }
+        .shopcart-list {
+            position: absolute;
+            bottom: 48px;
+            left: 0;
+            z-index: -1;
+            width: 100%;
+            .list-header {
+                height: 40px;
+                line-height: 40px;
+                padding: 0 18px;
+                background-color: #f3f5f7;
+                border-bottom: 1px solid rgba(7,17,27,0.1);
+                .title {
+                    float: left;
+                    font-size: 14px;
+                    color: rgb(7,17,21);
+                }
+                .empty {
+                    float: right;
+                    font-size: 12px;
+                    color: rgb(0,160,220);
+                }
+            }
+            .list-content {
+                padding: 0 18px;
+                max-height: 217px;
+                background-color: #fff;
+                overflow: auto; // 这个作者用的better-scroll，我这里没用
+                .food {
+                    position: relative;
+                    padding: 12px 0;
+                    box-sizing: border-box;
+                    .name {
+                        line-height: 24px;
+                        font-size: 14px;
+                        color: rgb(7,17,27);
+                    }
+                    .price {
+                        position: absolute;
+                        right: 90px;
+                        bottom: 12px;
+                        line-height: 24px;
+                        font-size: 14px;
+                        font-weight: 700;
+                        color: rgb(240, 20, 20);
+                    }
+                    .cartcontrol-wrapper {
+                        position: absolute;
+                        right: 0;
+                        bottom: 6px;
+                    }
+                }
+            }
         }
     }
 </style>
