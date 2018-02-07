@@ -1,44 +1,44 @@
 <template>
-  <div class="goods">
-  	<div class="menu-wrapper" ref="menuWrapper">
-  		<ul>
-  			<li class="menu-item line-bottom" :class="{on: index === currentIndex}" v-for="(item, index) in goods" @click="selectMenu(index, $event)">
-  				<div class="itemWrap">
-	  				<discount-type :type="item.type" v-if="item.type > 0"></discount-type>
-	  				<span>{{item.name}}</span>
-  				</div>
-  			</li>
-  		</ul>
-  	</div>
-  	<div class="foods-wrapper" ref="foodsWrapper">
-  		<ul>
-  			<li class="food-list food-list-hook" v-for="item in goods">
-  				<h1 class="title">{{item.name}}</h1>
-  				<ul>
-  					<li class="food-item line-bottom" v-for="food in item.foods">
-  						<div class="icon">
-  							<img width="57" height="57" :src="food.icon" alt="">
-  						</div>
-  						<div class="content">
-  							<h2 class="name">{{food.name}}</h2>
-  							<p class="desc">{{food.description}}</p>
-  							<div class="extra">
-  								<span class="count">月售{{food.sellCount}}</span>
-  								<span>好评率{{food.rating}}%</span>
-  							</div>
-  							<div class="price">
-  								<span class="now">￥{{food.price}}</span>
-  								<span class="old" v-if="food.oldPrice">￥{{food.oldPrice}}</span>
-  							</div>
-							<div class="shopcart-control-wrap"><shopcart-control :food="food"></shopcart-control></div>
-  						</div>
-  					</li>
-  				</ul>
-  			</li>
-  		</ul>
-  	</div>
-  	<shop-cart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shop-cart>
-  </div>
+	<div>
+	  <div class="goods">
+	  	<div class="menu-wrapper" ref="menuWrapper">
+	  		<ul>
+	  			<li class="menu-item line-bottom" :class="{on: index === currentIndex}" v-for="(item, index) in goods" @click="selectMenu(index, $event)">
+	  				<div class="itemWrap">
+		  				<discount-type :type="item.type" v-if="item.type > 0"></discount-type>
+		  				<span>{{item.name}}</span>
+	  				</div>
+	  			</li>
+	  		</ul>
+	  	</div>
+	  	<div class="foods-wrapper" ref="foodsWrapper">
+	  		<ul>
+	  			<li class="food-list food-list-hook" v-for="item in goods">
+	  				<h1 class="title">{{item.name}}</h1>
+	  				<ul>
+	  					<li class="food-item line-bottom" v-for="food in item.foods" @click="showFoodDetail(food)">
+	  						<div class="icon">
+	  							<img width="57" height="57" :src="food.icon" alt="">
+	  						</div>
+	  						<div class="content">
+	  							<h2 class="name">{{food.name}}</h2>
+	  							<p class="desc">{{food.description}}</p>
+	  							<div class="extra">
+	  								<span class="count">月售{{food.sellCount}}</span>
+	  								<span>好评率{{food.rating}}%</span>
+	  							</div>
+	  							<new-old-price :new-price="food.price" :old-price="food.oldPrice"></new-old-price>
+								<div class="shopcart-control-wrap"><shopcart-control :food="food"></shopcart-control></div>
+	  						</div>
+	  					</li>
+	  				</ul>
+	  			</li>
+	  		</ul>
+	  	</div>
+	  	<shop-cart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shop-cart>
+	  </div>
+	  <v-food :food="selectedFood" ref="food"></v-food>
+	</div>
 </template>
 
 <script>
@@ -48,6 +48,8 @@
 	import ShopcartControl from 'components/shopcart-control'
 	import BScroll from 'better-scroll'
 	import $ from 'jquery'
+	import VFood from 'components/v-food'
+	import NewOldPrice from 'components/baseComponents/new-old-price'
 	export default {
 	  name: 'Goods',
 	  props: { 
@@ -61,13 +63,16 @@
 	  components: { 
 	  	DiscountType,
 	  	ShopCart,
-	  	ShopcartControl
+	  	ShopcartControl,
+	  	VFood,
+	  	NewOldPrice
 	  },
 	  data() {
 	    return {
 	      goods: [],
 	      listHeight: [],
-	      scrollY: 0
+	      scrollY: 0,
+	      selectedFood: {}
 	    }
 	  },
 	  computed: { 
@@ -131,6 +136,10 @@
 	  			height += $(val).outerHeight()
 	  			this.listHeight.push(height)
 	  		})
+	  	},
+	  	showFoodDetail(food) {
+	  		this.selectedFood = food
+	  		this.$refs.food.show()
 	  	}
 	  }
 	}
@@ -218,20 +227,6 @@
 						}
 						:nth-child(n) { 
 							font-size: 10px;
-						}
-					}
-					.price { 
-						font-weight: 700;
-						line-height: 24px;
-						.now { 
-							margin-right: 8px;
-							font-size: 14px;
-							color: rgb(240, 20, 20);
-						}
-						.old { 
-							text-decoration: line-through;
-							font-size: 10px;
-							color: rgb(147, 153, 159);
 						}
 					}
 					.shopcart-control-wrap { 

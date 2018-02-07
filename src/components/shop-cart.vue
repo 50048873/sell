@@ -130,8 +130,13 @@
             }
         },
         methods: {
-            drop(originOffset) {
+            drop(el) {
                 this.$nextTick(() => {  // 加入队列，解决手机上同时执行多个动画慢的问题
+                    let $target = $(el)
+                    let originOffset = $target.offset()
+                    originOffset.width = $target.outerWidth()
+                    originOffset.height= $target.outerHeight()
+
                     let $ballWrap = $(this.$refs.ballWrap),
                         ballWrapWidth = $ballWrap.outerWidth(),
                         ballWrapHeight = $ballWrap.outerHeight()
@@ -313,19 +318,13 @@
                 height: 16px;
                 background-color: rgb(0, 160, 220);
                 border-radius: 50%;
+                &.ball-enter-active {    // 定义过渡的状态（时间，延迟和曲线函数）
+                  transition: all .4s linear;
+                }
             }
-        }
-        .ballWrap-enter-active {    // 定义过渡的状态（时间，延迟和曲线函数）
-          transition: all .4s cubic-bezier(.49,-0.29,.75,.41);
-        }
-        .ball-enter-active {    // 定义过渡的状态（时间，延迟和曲线函数）
-          transition: all .4s linear;
-        }
-        .fold-enter-active, .fold-leave-active {
-            transition: all 0.4s linear;
-        }
-        .fold-enter, .fold-leave-to {
-            transform: translate3d(0, 100%, 0);
+            &.ballWrap-enter-active {    // 定义过渡的状态（时间，延迟和曲线函数）
+              transition: all .4s cubic-bezier(.49,-0.29,.75,.41);
+            }
         }
         .shopcart-list {
             position: absolute;
@@ -379,6 +378,12 @@
                         bottom: 6px;
                     }
                 }
+            }
+            &.fold-enter-active, &.fold-leave-active {
+                transition: all 0.4s linear;
+            }
+            &.fold-enter, &.fold-leave-to {
+                transform: translate3d(0, 100%, 0);
             }
         }
     }

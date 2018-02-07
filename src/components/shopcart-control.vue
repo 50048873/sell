@@ -1,16 +1,17 @@
 <template>
   <div class="shopcart-control">
     <transition name="move">
-        <i class="fa fa-minus-circle decrease" v-show="food.count > 0" @click="decreaseCart"></i>
+        <i class="fa fa-minus-circle decrease" v-show="food.count > 0" @click.stop="decreaseCart"></i>
     </transition>
     <span class="count" v-show="food.count > 0">{{food.count}}</span>
-    <i class="fa fa-plus-circle add" @click="addCart($event)"></i>
+    <i class="fa fa-plus-circle add" @click.stop="addCart"></i>
   </div>
 </template>
 
 <script>
     import {eventHub} from 'assets/js/event.js'
     import $ from 'jquery'
+    import {getPosition} from 'assets/js/mixin.js'
     export default {
       name: 'ShopcartControl',
       props: { 
@@ -28,12 +29,8 @@
             } else {
                 this.$set(this.food, 'count', 1)
             }
-            let $target = $(event.target)
-            let originOffset = $target.offset()
-            originOffset.width = $target.outerWidth()
-            originOffset.height= $target.outerHeight()
-            
-            eventHub.$emit('cart-add', originOffset)
+
+            eventHub.$emit('cart-add', event.target)
         },
         decreaseCart() {
             if (this.food.count) {

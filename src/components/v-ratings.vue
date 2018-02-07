@@ -1,6 +1,11 @@
 <template>
   <div>
   	我是ratings
+  	<div>
+        <input type="file" accept="image/*" capture="camera">
+        <input type="file" accept="video/*" capture="camcorder">
+        <input type="file" accept="audio/*" capture="microphone">
+    </div>
   </div>
 </template>
 
