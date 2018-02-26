@@ -2,7 +2,7 @@
     <ul class="ratingList">
         <li v-for="item in data" class="line-bottom">
             <div>
-                <time class="rateTime">{{dateFormat(item.rateTime, 'yyyy-mm-dd hh-MM')}}</time>
+                <time class="rateTime">{{item.rateTime | dateFormat('yyyy-mm-dd hh:MM')}}</time>
                 <span class="avatar" :style="{backgroundImage: 'url(' + item.avatar + ')'}"></span>
                 <span class="username">{{item.username}}</span>
             </div>
@@ -11,6 +11,7 @@
                 <span class="text">{{item.text}}</span>
             </div>
         </li>
+        <li class="noRating" v-if="data.length === 0">暂无评价</li>
     </ul>
 </template>
 
@@ -50,6 +51,7 @@
                 .rateTime {
                     color: #94999f;
                     font-size: 10px;
+                    vertical-align: top;
                 }
                 .avatar {
                     float: right;
@@ -59,7 +61,6 @@
                     background-repeat: no-repeat;
                     background-size: cover;
                     border-radius: 50%;
-                    margin-top: 2px;
                 }
                 .username {
                     float: right;
@@ -82,6 +83,11 @@
                     font-size: 12px;
                 }
             }
+        }
+        .noRating {
+            padding: 16px 0;
+            font-size: 12px;
+            color: rgb(7,17,27);
         }
     }
 </style>

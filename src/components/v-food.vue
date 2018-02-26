@@ -1,6 +1,6 @@
 <template>
     <transition name="toggleFromRight">
-        <div class="food" v-if="food.price && isVisible" ref="food">
+        <div class="food" v-if="isVisible" ref="food">
             <div class="food-content">
                 <div class="image-header">
                     <img :src="food.image " alt="">
@@ -30,7 +30,7 @@
                 <split-vertical></split-vertical>
                 <div class="rating">
                     <h3 class="title">商品评价</h3>
-                    <rating-select :types="getTypes" @onSelect="onSelect" @onToggleContent="onToggleContent"></rating-select>
+                    <rating-select :data="getRatingSelect" @onSelect="onSelect" @onToggleContent="onToggleContent"></rating-select>
                     <rating-list :data="getRatings"></rating-list>
                 </div>
             </div>
@@ -49,7 +49,11 @@
     import RatingSelect from 'components/baseComponents/rating-select'
     import RatingList from 'components/baseComponents/rating-list'
 
-	export default {
+    const POSITIVE = 0, // 正面
+          NEGATIVE = 1, // 负面
+          ALL = -1
+
+    export default {
         name: 'VFood',
         props: {
             food: {
@@ -71,7 +75,7 @@
             }
         },
         computed: {
-            getTypes() {
+            getRatingSelect() {
                 let types = [
                     {
                         name: '全部',
@@ -109,24 +113,26 @@
             getRatings() {
                 let res = this.food.ratings
 
-                res = res.filter((item) => {
-                    switch (this.selectedIndex) {
-                        case 0:
-                            return true
-                        case 1: 
-                            return item.rateType === 1
-                        case 2: 
-                            return item.rateType === 0
-                    }
-                })
+                if (this.selectedIndex === 0 && !this.hasContented) {
+                    return res
+                }
 
-                res = res.filter((item) => {
-                    if (this.hasContented) {
+                if (this.selectedIndex !== 0) {
+                    res = res.filter((item) => {
+                        switch (this.selectedIndex) {
+                            case 1: 
+                                return item.rateType === POSITIVE
+                            case 2: 
+                                return item.rateType === NEGATIVE
+                        }
+                    })
+                }
+                
+                if (this.hasContented) {
+                    res = res.filter((item) => {
                         return !!item.text
-                    } else {
-                        return true
-                    }
-                })
+                    })
+                }
 
                 return res
             }
@@ -135,13 +141,10 @@
             show() {
                 this.isVisible = true
                 this.$nextTick(() => {
-                    if (!this.betterScroll) {
-                        this.betterScroll = new BScroll(this.$refs.food, {
-                            click: true
-                        })
-                    } else {
-                        this.betterScroll.refresh()
-                    }
+                    this.betterScroll = new BScroll(this.$refs.food, {
+                        click: true,
+                        bounceTime: 200 //默认值为700ms。在默认值700的情况下，如果滑动过程中快速点击，会出现点击无效的情况，只有当动画结束时，点击才有效
+                    })
                 })
             },
             close() {
@@ -164,7 +167,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-	.food {
+    .food {
         position: fixed;
         top: 0;
         right: 0;
@@ -172,6 +175,7 @@
         left: 0;
         z-index: 5;
         background-color: white;
+        //overflow-y: auto;
         &.toggleFromRight-enter-active, &.toggleFromRight-leave-active {
             transition: all 0.4s ease-out;
         }
@@ -198,6 +202,7 @@
                 .fa {
                     font-size: 20px;
                     color: white;
+                    text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
                 }
             }
         }
@@ -260,7 +265,7 @@
             .text {
                 font-size: 12px;
                 color: rgb(77,85,93);
-                padding: 0 8px;
+                //padding: 0 8px;
                 line-height: 24px;
             }
         }

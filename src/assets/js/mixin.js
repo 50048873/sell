@@ -5,5 +5,10 @@ export let dateFormat = {
 		dateFormat(time, formatter) {
             return _dateFormat(time, formatter)
         }
+	},
+	filters: {
+		dateFormat(time, formatter) {
+            return _dateFormat(time, formatter)
+        }
 	}
 }
