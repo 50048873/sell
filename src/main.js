@@ -16,10 +16,10 @@ Vue.use(VueResource)
 
 let routes = { 
 	mode: 'history',
-	base: '/sell/',
+	base: '/', // 如果此处设置'/sell'，则config/index.js里dev下的assetsSubDirectory设置为sell/static
 	//linkActiveClass: 'active', // 全局配置链接激活时使用的 CSS 类名默认值。
 	routes: [ 
-		{ path: '/', component: VGoods, redirect: '/goods' },
+		{ path: '/', redirect: '/goods' },
 		{ path: '/goods', component: VGoods },
 		{ path: '/ratings', component: VRatings },
 		{ path: '/seller', component: VSeller }

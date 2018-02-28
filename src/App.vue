@@ -12,13 +12,16 @@
     		<router-link to="/seller">商家</router-link>
     	</div>
     </div>
-    <router-view :seller="seller"></router-view>
+    <keep-alive>
+      <router-view :seller="seller"></router-view>
+    </keep-alive>
   </div>
 </template>
 
 <script>
 import VHeader from 'components/v-header'
 import {ERR_OK} from 'api/config'
+import {getLocationSearchValueByKey} from 'assets/js/util'
 
 export default {
   name: 'app',
@@ -31,12 +34,12 @@ export default {
   	}
   },
   created () { 
-  	this.$http.get('/api/seller')
+    let id = getLocationSearchValueByKey('id')
+  	this.$http.get('/api/seller?id=' + id)
   		.then((res) => { 
   			res = res.body
   			if (res.errno === ERR_OK) { 
-	  			this.seller = res.data
-	  			//console.log(this.seller)
+          this.seller = Object.assign(res.data, {id: id})
   			}
   		})
   }

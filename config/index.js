@@ -9,7 +9,7 @@ module.exports = {
     assetsSubDirectory: 'static',
     //assetsPublicPath: '/',
     assetsPublicPath: './',
-    productionSourceMap: true,
+    productionSourceMap: false, // 是否允许调试
     // Gzip off by default as many popular static hosts such as
     // Surge or Netlify already gzip all static assets for you.
     // Before setting to `true`, make sure to:
@@ -20,13 +20,14 @@ module.exports = {
     // View the bundle analyzer report after build finishes:
     // `npm run build --report`
     // Set to `true` or `false` to always turn it on or off
-    bundleAnalyzerReport: process.env.npm_config_report
+    bundleAnalyzerReport: process.env.npm_config_report,
+    port: 8086 // 这是用于node prod.server.js命令的端口（prod.server.js用于dist目录内容）
   },
   dev: {
     env: require('./dev.env'),
     port: 8085,
     autoOpenBrowser: true,
-    assetsSubDirectory: 'sell/static',
+    assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {},
     // CSS Sourcemaps off by default because relative paths are "buggy"

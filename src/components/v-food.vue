@@ -48,10 +48,8 @@
     import SplitVertical from 'components/baseComponents/split-vertical'
     import RatingSelect from 'components/baseComponents/rating-select'
     import RatingList from 'components/baseComponents/rating-list'
-
-    const POSITIVE = 0, // 正面
-          NEGATIVE = 1, // 负面
-          ALL = -1
+    import {getRatingsSelectTypes} from 'assets/js/mixin'
+    import {POSITIVE, NEGATIVE, ALL} from 'assets/js/config'
 
     export default {
         name: 'VFood',
@@ -67,6 +65,7 @@
             RatingSelect,
             RatingList
         },
+        mixins: [getRatingsSelectTypes],
         data() {
             return {
                 isVisible: false,
@@ -91,24 +90,7 @@
                     }
                 ]
 
-                let all = 0,
-                    recommend = 0,
-                    shit = 0
-                this.food.ratings.forEach((item) => {
-                    let rateType = item.rateType
-                    if (rateType === 1) {
-                        recommend++
-                    } else if (rateType === 0) {
-                        shit++
-                    }
-                })
-                all = recommend + shit
-
-                types[0].count = all
-                types[1].count = recommend
-                types[2].count = shit
-
-                return types
+                return this.getRatingsSelectTypes(types, this.food.ratings)
             },
             getRatings() {
                 let res = this.food.ratings

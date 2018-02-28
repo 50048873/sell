@@ -57,6 +57,23 @@
 	}
 }
 
+.line-right {
+	position: relative;
+	&:before { 
+		content: " ";
+	    position: absolute;
+	    top: 0;
+	    right: 0;
+	    bottom: 0;
+	    width: 1px;
+	    border-right: 1px solid @line-half;
+	    -webkit-transform-origin: 0 0;
+	    transform-origin: 0 0;
+	    -webkit-transform: scaleX(0.5);
+	    transform: scaleX(0.5);
+	}
+}
+
 .line-bottom {
     position: relative;
     &:after { 

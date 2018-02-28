@@ -1,20 +1,15 @@
-# sell
-# 学习Vue.js高仿饿了么外卖App（ 上一次学习到：9-1 00:00:00 ）
+# sell app
+# 学习Vue.js高仿饿了么外卖App
 
-
-> sell app
 
 ## Build Setup
 
-``` bash
-# install dependencies
-npm install
+# install dependencies （安装依赖）
+npm install 或 npm install --registry https://registry.npm.taobao.org 或 npm install --registry https://r.cnpmjs.org
 
-# serve with hot reload at localhost:8080
+# serve with hot reload at localhost:8085 （开发）
 npm run dev
 
-# build for production with minification
+# build for production with minification at localhost:8086 （打包）
 npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
+打包的文件在dist目录下，要运行dist下的index.html，需先运行node prod.server.js

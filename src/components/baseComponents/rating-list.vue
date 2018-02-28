@@ -32,9 +32,9 @@
             getIcon(rateType) {
                 switch (rateType) {
                     case 0:
-                        return down
-                    case 1: 
                         return up
+                    case 1: 
+                        return down
                 }
             }
         }
